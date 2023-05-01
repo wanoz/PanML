@@ -1,2 +1,2 @@
 # Description
-An effort to make as many ML code as accessible and useful.
+Aiming to make code development in ML training, experimentation and analysis more accessible and useful.
