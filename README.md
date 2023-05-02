@@ -3,7 +3,7 @@ This is a module to make data analysis and code development in generative ML exp
 
 ## Installation
 ```
-git clone
+git clone https://github.com/wanoz/panml.git
 ```
 
 ## Examples
