@@ -30,9 +30,14 @@ tokenizer = AutoTokenizer.from_pretrained('distilgpt2', mirror='https://huggingf
 model = AutoModelForCausalLM.from_pretrained("distilgpt2")
 ```
 
+### Create model pack from the loaded model and tokenizer
+```
+modelpack = ModelPack(model, tokenizer, input_block_size=20, source='huggingface')
+```
+
 ### Generate output
 ```
-output = model.predict('hello world is')
+output = modelpack.predict('hello world is')
 print(output['text'])
 ```
 ```
@@ -42,7 +47,7 @@ print(output['text'])
 
 ### Show probability of output token
 ```
-output = model.predict('hello world is', display_probability=True)
+output = modelpack.predict('hello world is', display_probability=True)
 print(output['probability'][:5]) # show probability of first 5 tokens in the generated output that follows the provided context
 ```
 ```
@@ -78,11 +83,11 @@ x = df['some_text']
 y = x
 
 # Train model
-model.fit(x, y, train_args, instruct=False)
+modelpack.fit(x, y, train_args, instruct=False)
 ```
 
 ### Run prediction
 ```
-output = model.predict('hello world is', display_probability=True)
+output = modelpack.predict('hello world is', display_probability=True)
 ```
 
