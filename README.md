@@ -9,6 +9,7 @@ git clone
 ## Examples
 ### Importing the module
 ```
+# Import panml
 from panml import ModelPack
 
 # Import other required libraries
