@@ -10,6 +10,14 @@ git clone
 ### Importing the module
 ```
 from panml import ModelPack
+
+# Import other required libraries
+import numpy as np
+import pandas as np
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+from transformers import AutoModelForCausalLM, AutoModelForSeq2SeqLM, AutoTokenizer
 ```
 
 ### Using HuggingFace models
@@ -25,8 +33,8 @@ model = AutoModelForCausalLM.from_pretrained("distilgpt2")
 ```
 output = model.predict('hello world is')
 print(output['text'])
-'hello world is a place where people can live and work together, and where people can live and work together, and where people can live and work together'
 ```
+'hello world is a place where people can live and work together, and where people can live and work together, and where people can live and work together'
 
 ### Show probability of output token
 ```
