@@ -55,7 +55,7 @@ print(output['probability'][:5]) # show probability of first 5 tokens in the gen
 ```
  
 ### Fine tune the model with your own data from dataframe
-Train in self-supervised autoregressive format
+Execute in self-supervised autoregressive training regime
 ```
 # Specify train args
 train_args = {
