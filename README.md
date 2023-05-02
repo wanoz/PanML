@@ -36,7 +36,7 @@ output = model.predict('hello world is')
 print(output['text'])
 ```
 ```
-`Output`
+# Output
 'hello world is a place where people can live and work together, and where people can live and work together, and where people can live and work together'
 ```
 
@@ -46,7 +46,7 @@ output = model.predict('hello world is', display_probability=True)
 print(output['probability'][:5]) # show probability of first 5 tokens in the generated output that follows the provided context
 ```
 ```
-`Output`
+# Output
 [{'token': ' a', 'probability': 0.052747420966625214},
  {'token': ' place', 'probability': 0.045980263501405716},
  {'token': ' where', 'probability': 0.4814596474170685},
