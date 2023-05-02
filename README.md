@@ -1,5 +1,5 @@
 ## Goal
-This is a module to make data analysis and code development in generative ML experimentation more accessible and useful.
+This module aims to make data analysis and code development in generative ML experimentation more accessible and useful.
 
 ## Installation
 ```
