@@ -12,13 +12,14 @@ git clone https://github.com/wanoz/panml.git
 # Import panml
 from panml import ModelPack
 
-# Import other required libraries
+# Import other modules/packages as required
 import numpy as np
 import pandas as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from transformers import AutoModelForCausalLM, AutoModelForSeq2SeqLM, AutoTokenizer
+...
 ```
 
 ### Using HuggingFace models
