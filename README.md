@@ -10,7 +10,7 @@ git clone https://github.com/wanoz/panml.git
 ### Importing the module
 ```
 # Import panml
-from panml import ModelPack
+from panml.models import ModelPack
 
 # Import other modules/packages as required
 import numpy as np
