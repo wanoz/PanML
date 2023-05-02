@@ -89,5 +89,6 @@ modelpack.fit(x, y, train_args, instruct=False)
 ### Generate output with the fine tuned model
 ```
 output = modelpack.predict('hello world is', display_probability=True)
+print(output['text'])
 ```
 
