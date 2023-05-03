@@ -1,5 +1,5 @@
 ## Goal
-This module aims to make data analysis and code development in generative ML experimentation more accessible and useful.
+This package aims to make analysis and tuning of generative ML models more accessible, by providing a consistent layer of programmatic interface to foundation models for Data Scientists, Machine Learning Engineers and Software Developers. It's a work in progress, very much open for collaboration and contribution. 
 
 ## Installation
 ```
