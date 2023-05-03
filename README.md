@@ -132,7 +132,7 @@ prompt_modifier = [
      "post": ""},
 ]
 
-output = modelpack.predict('What is the best way to live a healthy lifestyle?', display_probability=True, prompt_modifier=prompt_modifier)
+output = modelpack.predict('What is the best way to live a healthy lifestyle?', prompt_modifier=prompt_modifier)
 print(output['text'])
 ```
 ```
@@ -146,6 +146,7 @@ output = modelpack.embedding('What is the best way to live a healthy lifestyle?'
 print(output[:5]) # show first 5 embedding elements
 ```
 ```
+# Output
 [0.025805970653891563,
  0.007422071415930986,
  0.01738160289824009,
