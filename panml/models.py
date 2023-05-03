@@ -167,15 +167,16 @@ class OpenAIModelPack():
         self.model_embedding = 'text-embedding-ada-002'
         openai.key = api_key
     
-    # Generate text
-    def predict(self, text, temperature=0, max_tokens=200, top_p=1, n=3, frequency_penalty=0, presence_penalty=0, 
-                display_probability=False, logprobs=1):
+    # Generate text of single model call
+    @staticmethod
+    def _predict(model, text, temperature, max_tokens, top_p, n, frequency_penalty, presence_penalty, 
+                 display_probability, logprobs):
         output_context = {
             'text': None,
             'probability': None,
         }
         response = openai.Completion.create(
-            model=self.model,
+            model=model,
             prompt=text,
             temperature=temperature,
             max_tokens=max_tokens,
@@ -187,15 +188,42 @@ class OpenAIModelPack():
         )
 
         output_context['text'] = response['choices'][0]['text']
-        
+
         # Get probability of output tokens
         if display_probability:
             tokens = response["choices"][0]['logprobs']['tokens']
             token_logprobs = response["choices"][0]['logprobs']['token_logprobs']
             output_context['probability'] = [{'token': token, 'probability': math.e**logprob} for token, logprob in zip(tokens, token_logprobs)]
-        
+
         return output_context
     
+    # Generate text in prompt loop
+    def predict(self, text, temperature=0, max_tokens=300, top_p=1, n=3, frequency_penalty=0, presence_penalty=0, 
+                display_probability=False, logprobs=1, prompt_modifier=[{'pre': '', 'post': ''}], keep_last=True):
+        
+        # Create loop for text prediction
+        response_words = 0
+        history = []
+        for count, mod in enumerate(prompt_modifier):
+            if count > 0:
+                text = output_context['text']
+            text = f"{mod['pre']} \n {text} \n {mod['post']}"
+            output_context = self._predict(self.model, text, temperature=temperature, max_tokens=max_tokens, top_p=top_p,
+                                           n=n, frequency_penalty=frequency_penalty, presence_penalty=presence_penalty,
+                                           display_probability=display_probability, logprobs=logprobs)
+
+            # Terminate loop for next prompt when context contains no meaningful words (less than 2)
+            response_words = output_context['text'].replace('\n', '').replace(' ', '')
+            if len(response_words) < 2:
+                break
+
+            history.append(output_context)
+        
+        if keep_last:
+            return history[-1] # returns last prediction output
+        else:
+            return history # returns all historical prediction output
+        
     # Embed text
     def embedding(self, text, model=None):
         text = text.replace("\n", " ")
