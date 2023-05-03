@@ -64,7 +64,7 @@ Fine tune the model with your own data from Pandas dataframe - execute in self-s
 # Specify train args
 train_args = {
     'title': 'my_tuned_gpt2',
-    'num_train_epochs' : 50,
+    'num_train_epochs' : 30,
     'mlm': False,
     'optimizer': 'adamw_torch',
     'per_device_train_batch_size': 10,
