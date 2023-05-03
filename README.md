@@ -59,8 +59,7 @@ print(output['probability'][:5]) # show probability of first 5 tokens in the gen
  {'token': ' can', 'probability': 0.2809840738773346}]
 ```
  
-Fine tune the model with your own data from dataframe
-Execute in self-supervised autoregressive training regime
+Fine tune the model with your own data from dataframe. Execute in self-supervised autoregressive training regime
 ```
 # Specify train args
 train_args = {
