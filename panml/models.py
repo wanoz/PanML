@@ -48,7 +48,7 @@ class HuggingFaceModelPack():
     
     # Generate text
     def predict(self, text, max_length=50, skip_special_tokens=True, display_probability=False, 
-                num_return_sequences=1, temperature=0.7, top_p=3, top_k=0):
+                num_return_sequences=1, temperature=0.8, top_p=0.8, top_k=0):
         output_context = {
             'text': None,
             'probability': None,
