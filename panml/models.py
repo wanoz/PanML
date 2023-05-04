@@ -47,7 +47,7 @@ class HuggingFaceModelPack():
         return emb_pad
     
     # Generate text
-    def predict(self, text, max_length=100, skip_special_tokens=True, display_probability=False):
+    def predict(self, text, max_length=80, skip_special_tokens=True, display_probability=False, num_beams=2, early_stopping=True):
         output_context = {
             'text': None,
             'probability': None,
@@ -57,6 +57,8 @@ class HuggingFaceModelPack():
         output = self.model.generate(input_ids, 
                                      max_length=max_length,
                                      pad_token_id=self.model.config.eos_token_id,
+                                     num_beams=num_beams,
+                                     early_stopping=early_stopping,
                                      num_return_sequences=1, 
                                      output_scores=display_probability, 
                                      return_dict_in_generate=display_probability, 
