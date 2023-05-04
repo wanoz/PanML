@@ -48,7 +48,7 @@ class HuggingFaceModelPack():
     
     # Generate text
     def predict(self, text, max_length=50, skip_special_tokens=True, display_probability=False, 
-                num_return_sequences=1, temperature=0.8, top_p=0.8, top_k=0):
+                num_return_sequences=1, temperature=0.8, top_p=0.8, top_k=0, repetition_penalty=0.5, length_penalty=0.8):
         output_context = {
             'text': None,
             'probability': None,
@@ -62,6 +62,8 @@ class HuggingFaceModelPack():
                                      temperature=temperature,
                                      top_p=top_p,
                                      top_k=top_k,
+                                     repetition_penalty=repetition_penalty,
+                                     length_penalty=length_penalty,
                                      output_scores=display_probability, 
                                      return_dict_in_generate=display_probability, 
                                      renormalize_logits=True)
