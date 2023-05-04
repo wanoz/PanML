@@ -18,12 +18,12 @@ class HuggingFaceModelPack():
     Generic model pack class for HuggingFace Hub models
     '''
     # Initialize class variables
-    def __init__(self, model_desc, input_block_size, padding_length, source):
+    def __init__(self, model, input_block_size, padding_length, source):
         if source == 'huggingface':
-            self.model = AutoModelForCausalLM.from_pretrained(model_desc)
+            self.model_hf = AutoModelForCausalLM.from_pretrained(model)
         elif source == 'local':
-            self.model = AutoModelForCausalLM.from_pretrained(model_desc, source='local')
-        self.tokenizer = AutoTokenizer.from_pretrained(self.model.config.model_type, mirror='https://huggingface.co')
+            self.model_hf = AutoModelForCausalLM.from_pretrained(model, source='local')
+        self.tokenizer = AutoTokenizer.from_pretrained(self.model_hf.config.model_type, mirror='https://huggingface.co')
         self.padding_length = padding_length
         self.input_block_size = input_block_size
         self.train_default_args = ['title', 'num_train_epochs', 'optimizer', 'mlm', 
@@ -59,16 +59,16 @@ class HuggingFaceModelPack():
         }
         
         input_ids = self.tokenizer.encode(text, return_tensors='pt')
-        output = self.model.generate(input_ids, 
-                                     max_length=max_length,
-                                     pad_token_id=self.model.config.eos_token_id,
-                                     num_return_sequences=num_return_sequences, 
-                                     temperature=temperature,
-                                     top_p=top_p,
-                                     top_k=top_k,
-                                     output_scores=display_probability, 
-                                     return_dict_in_generate=display_probability, 
-                                     renormalize_logits=True)
+        output = self.model_hf.generate(input_ids, 
+                                        max_length=max_length,
+                                        pad_token_id=self.model.config.eos_token_id,
+                                        num_return_sequences=num_return_sequences, 
+                                        temperature=temperature,
+                                        top_p=top_p,
+                                        top_k=top_k,
+                                        output_scores=display_probability, 
+                                        return_dict_in_generate=display_probability, 
+                                        renormalize_logits=True)
                                           
         # Get probability of output tokens
         if display_probability:
@@ -128,7 +128,7 @@ class HuggingFaceModelPack():
             )
 
             trainer = Trainer(
-                model=self.model,
+                model=self.model_hf,
                 args=training_args,
                 train_dataset=tokenized_data.remove_columns(['text']),
                 eval_dataset=tokenized_data.remove_columns(['text']),
@@ -153,7 +153,7 @@ class HuggingFaceModelPack():
             )
             
             trainer = Seq2SeqTrainer(
-                model=self.model,
+                model=self.model_hf,
                 args=training_args,
                 train_dataset=tokenized_data.remove_columns(['text']),
                 eval_dataset=tokenized_data.remove_columns(['text']),
