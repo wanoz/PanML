@@ -256,8 +256,15 @@ class ModelPack():
         # Accepted models from sources
         self.accepted_models = {
             'huggingface': [
+                'gpt2',
+                'gpt2-medium',
+                'gpt2-xl',
                 'distilgpt2', 
-                'google/flan-t5-base'
+                'google/flan-t5-base',
+                'google/flan-t5-small',
+                'google/flan-t5-large',
+                'google/flan-t5-xl',
+                'google/flan-t5-xxl',
             ],
             'openai': [
                 'text-davinci-002', 
@@ -267,15 +274,16 @@ class ModelPack():
         
         # HuggingFace model call
         if self.source == 'huggingface':
-            assert self.tokenizer is not None, 'tokenizer required for HuggingFace model'
+            assert self.model in self.accepted_models['huggingface'], 'model name is not included in accepted HuggingFace Hub models for this package. Included models are: ' + ' '.join(self.accepted_models['huggingface'])
+            assert self.tokenizer is not None, 'tokenizer required for HuggingFace Hub model'
             self.instance = HuggingFaceModelPack(self.model, 
                                                  self.tokenizer, 
                                                  self.input_block_size, 
                                                  self.padding_length)
         # OpenAI model call
         elif self.source == 'openai':
-            assert self.api_key is not None, 'api key has not been specified'
-            assert self.model in self.accepted_models['openai'], 'model name is not found in accepted openai models: ' + ' '.join(self.accepted_models['openai'])
+            assert self.model in self.accepted_models['openai'], 'model is not included in accepted OpenAI models for this package. Included models are: ' + ' '.join(self.accepted_models['openai'])
+            assert self.api_key is not None, 'api key has not been specified for OpenAI model call'
             self.instance = OpenAIModelPack(model=self.model, api_key=self.api_key)
                 
     # Direct to the attribute ofthe sub model pack class (attribute not found in the main model pack class)
