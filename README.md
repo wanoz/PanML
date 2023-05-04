@@ -20,21 +20,13 @@ import pandas as pd
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from transformers import AutoModelForCausalLM, AutoModelForSeq2SeqLM, AutoTokenizer
 ...
 ```
 
 ### Using HuggingFace models
-Load model and tokenizer from HuggingFace
+Use model pack to load from HuggingFace Hub
 ```
-# Fetch GPT2 model from HuggingFace hub
-tokenizer = AutoTokenizer.from_pretrained('distilgpt2', mirror='https://huggingface.co')
-model = AutoModelForCausalLM.from_pretrained("distilgpt2")
-```
-
-Create model pack from the loaded model and tokenizer
-```
-modelpack = ModelPack(model, tokenizer, input_block_size=20, source='huggingface')
+modelpack = ModelPack(model='gpt2', input_block_size=20, source='huggingface')
 ```
 
 Generate output
@@ -91,6 +83,11 @@ Generate output with the fine tuned model
 ```
 output = modelpack.predict('hello world is', display_probability=True)
 print(output['text'])
+```
+
+Load the locally fine tuned model for use
+```
+new_modelpack = ModelPack(model='./results/my_tuned_gpt2/', input_block_size=20, source='local')
 ```
 
 ### Using OpenAI models
