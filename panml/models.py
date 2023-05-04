@@ -274,7 +274,7 @@ class ModelPack():
         
         # HuggingFace model call
         if self.source == 'huggingface':
-            assert self.model in self.accepted_models['huggingface'], 'model name is not included in accepted HuggingFace Hub models for this package. Included models are: ' + ' '.join(self.accepted_models['huggingface'])
+            assert self.model.config._name_or_path in self.accepted_models['huggingface'], 'model name is not included in accepted HuggingFace Hub models for this package. Included models are: ' + ' '.join(self.accepted_models['huggingface'])
             assert self.tokenizer is not None, 'tokenizer required for HuggingFace Hub model'
             self.instance = HuggingFaceModelPack(self.model, 
                                                  self.tokenizer, 
