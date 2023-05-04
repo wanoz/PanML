@@ -24,7 +24,7 @@ import torch.nn.functional as F
 ```
 
 ### Using HuggingFace models
-Use model pack to load from HuggingFace Hub
+Create model pack to load model from HuggingFace Hub
 ```
 modelpack = ModelPack(model='gpt2', input_block_size=20, source='huggingface')
 ```
