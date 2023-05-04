@@ -48,7 +48,7 @@ class HuggingFaceModelPack():
     
     # Generate text
     def predict(self, text, max_length=50, skip_special_tokens=True, display_probability=False, 
-                num_return_sequences=1, num_beams=3, early_stopping=True):
+                num_return_sequences=1, temperature=0.7, top_p=3, top_k=0):
         output_context = {
             'text': None,
             'probability': None,
@@ -59,8 +59,9 @@ class HuggingFaceModelPack():
                                      max_length=max_length,
                                      pad_token_id=self.model.config.eos_token_id,
                                      num_return_sequences=num_return_sequences, 
-                                     num_beams=num_beams,
-                                     early_stopping=early_stopping,
+                                     temperature=temperature,
+                                     top_p=top_p,
+                                     top_k=top_k,
                                      output_scores=display_probability, 
                                      return_dict_in_generate=display_probability, 
                                      renormalize_logits=True)
