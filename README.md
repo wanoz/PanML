@@ -27,7 +27,7 @@ from transformers import AutoModelForCausalLM, AutoModelForSeq2SeqLM, AutoTokeni
 ### Using HuggingFace models
 Load model and tokenizer from HuggingFace
 ```
-Fetch GPT2 model from HuggingFace hub
+# Fetch GPT2 model from HuggingFace hub
 tokenizer = AutoTokenizer.from_pretrained('distilgpt2', mirror='https://huggingface.co')
 model = AutoModelForCausalLM.from_pretrained("distilgpt2")
 ```
