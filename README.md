@@ -1,4 +1,4 @@
-## Pan-ML: Generative AI/ML development toolkit for humans
+## PanML: Generative AI/ML development toolkit for humans
 
 ## Goal
 This package aims to make analysis and experimentation of generative AI/ML models more accessible, by providing a consistent layer of programmatic interface to foundation models for Data Scientists, Machine Learning Engineers and Software Developers. It's a work in progress, so very much open for collaboration and contribution. 
