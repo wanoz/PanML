@@ -1,4 +1,4 @@
-# PanML: The generative AI/ML development playground for Data Scientists, Machine Learning Engineers and Developers
+# PanML: An easy-to-use generative AI/ML development toolkit
 
 ## Goal
 This package aims to make analysis and tuning of generative AI/ML models more accessible, by providing a consistent layer of programmatic interface to foundation models for Data Scientists, Machine Learning Engineers and Software Developers. It's a work in progress, so very much open for collaboration and contribution. 
