@@ -47,7 +47,7 @@ class HuggingFaceModelPack():
         return emb_pad
     
     # Generate text
-    def predict(self, text, max_length=80, skip_special_tokens=True, display_probability=False, num_beams=2, early_stopping=True):
+    def predict(self, text, max_length=50, skip_special_tokens=True, display_probability=False, num_beams=3, early_stopping=True):
         output_context = {
             'text': None,
             'probability': None,
@@ -200,7 +200,7 @@ class OpenAIModelPack():
         return output_context
     
     # Generate text in prompt loop
-    def predict(self, text, temperature=0, max_tokens=300, top_p=1, n=3, frequency_penalty=0, presence_penalty=0, 
+    def predict(self, text, temperature=0, max_tokens=100, top_p=1, n=3, frequency_penalty=0, presence_penalty=0, 
                 display_probability=False, logprobs=1, prompt_modifier=[{'pre': '', 'post': ''}], keep_last=True):
         
         # Create loop for text prediction
