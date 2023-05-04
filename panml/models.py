@@ -292,12 +292,10 @@ class ModelPack():
         if self.source == 'huggingface':
             assert self.model in self.accepted_models['huggingface'], \
                 'model name is not included in accepted HuggingFace Hub models for this package. Included models are: ' + ' '.join([f"{m}" for m in self.accepted_models['huggingface']])
-            assert self.tokenizer is not None, 'tokenizer required for HuggingFace Hub model'
             self.instance = HuggingFaceModelPack(self.model, self.input_block_size, self.padding_length, self.source)
 
         # Locally trained model call of HuggingFace Hub model
         elif self.source == 'local':
-            assert self.tokenizer is not None, 'tokenizer required for HuggingFace Hub model'
             self.instance = HuggingFaceModelPack(self.model, self.input_block_size, self.padding_length, self.source)
 
         # OpenAI model call
