@@ -8,6 +8,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 from datasets import Dataset
+from transformers import AutoModelForCausalLM, AutoModelForSeq2SeqLM, AutoTokenizer
 from transformers import TrainingArguments, Trainer, Seq2SeqTrainer, DataCollatorForLanguageModeling, DataCollatorForSeq2Seq
 import openai
 
@@ -17,10 +18,13 @@ class HuggingFaceModelPack():
     Generic model pack class for HuggingFace Hub models
     '''
     # Initialize class variables
-    def __init__(self, model, tokenizer, input_block_size, padding_length=100):
+    def __init__(self, model_desc, input_block_size, padding_length, source):
+        if source == 'huggingface':
+            self.model = AutoModelForCausalLM.from_pretrained(model_desc)
+        elif source == 'local':
+            self.model = AutoModelForCausalLM.from_pretrained(model_desc, source='local')
+        self.tokenizer = AutoTokenizer.from_pretrained(self.model.config.model_type, mirror='https://huggingface.co')
         self.padding_length = padding_length
-        self.tokenizer = tokenizer
-        self.model = model
         self.input_block_size = input_block_size
         self.train_default_args = ['title', 'num_train_epochs', 'optimizer', 'mlm', 
                                    'per_device_train_batch_size', 'per_device_eval_batch_size',
@@ -48,7 +52,7 @@ class HuggingFaceModelPack():
     
     # Generate text
     def predict(self, text, max_length=50, skip_special_tokens=True, display_probability=False, 
-                num_return_sequences=1, temperature=0.8, top_p=0.8, top_k=0, repetition_penalty=0.5, length_penalty=0.8):
+                num_return_sequences=1, temperature=0.8, top_p=0.8, top_k=0):
         output_context = {
             'text': None,
             'probability': None,
@@ -62,8 +66,6 @@ class HuggingFaceModelPack():
                                      temperature=temperature,
                                      top_p=top_p,
                                      top_k=top_k,
-                                     repetition_penalty=repetition_penalty,
-                                     length_penalty=length_penalty,
                                      output_scores=display_probability, 
                                      return_dict_in_generate=display_probability, 
                                      renormalize_logits=True)
@@ -105,7 +107,7 @@ class HuggingFaceModelPack():
         
         # Check for missing input arguments
         assert set(list(train_args.keys())) == set(self.train_default_args), \
-        f'Train args are not in the required format - missing: {", ".join(list(set(self.train_default_args) - set(list(train_args.keys()))))}'
+            f'Train args are not in the required format - missing: {", ".join(list(set(self.train_default_args) - set(list(train_args.keys()))))}'
         
         if instruct:
             print('Setting up training in sequence to sequence format...')
@@ -277,23 +279,34 @@ class ModelPack():
                 'text-davinci-003',
             ],
         }
+
+        # Accepted source descriptions
+        self.accepted_sources = [
+            'huggingface', 
+            'local', 
+            'openai',
+        ]
         
-        # HuggingFace model call
+        # HuggingFace Hub model call
+        assert self.source in self.accepted_sources, 'source not recognized. Supported sources are: ' + ' '.join([f"{s}" for s in self.accepted_sources])
         if self.source == 'huggingface':
-            assert self.model.config._name_or_path in self.accepted_models['huggingface'], \
-                'model name is not included in accepted HuggingFace Hub models for this package. Included models are: ' + ' '.join(self.accepted_models['huggingface'])
+            assert self.model in self.accepted_models['huggingface'], \
+                'model name is not included in accepted HuggingFace Hub models for this package. Included models are: ' + ' '.join([f"{m}" for m in self.accepted_models['huggingface']])
             assert self.tokenizer is not None, 'tokenizer required for HuggingFace Hub model'
-            self.instance = HuggingFaceModelPack(self.model, 
-                                                 self.tokenizer, 
-                                                 self.input_block_size, 
-                                                 self.padding_length)
+            self.instance = HuggingFaceModelPack(self.model, self.input_block_size, self.padding_length, self.source)
+
+        # Locally trained model call of HuggingFace Hub model
+        elif self.source == 'local':
+            assert self.tokenizer is not None, 'tokenizer required for HuggingFace Hub model'
+            self.instance = HuggingFaceModelPack(self.model, self.input_block_size, self.padding_length, self.source)
+
         # OpenAI model call
         elif self.source == 'openai':
             assert self.model in self.accepted_models['openai'], \
-                'model is not included in accepted OpenAI models for this package. Included models are: ' + ' '.join(self.accepted_models['openai'])
+                'model is not included in accepted OpenAI models for this package. Included models are: ' + ' '.join([f"{m}" for m in self.accepted_models['openai']])
             assert self.api_key is not None, 'api key has not been specified for OpenAI model call'
             self.instance = OpenAIModelPack(model=self.model, api_key=self.api_key)
-                
+
     # Direct to the attribute ofthe sub model pack class (attribute not found in the main model pack class)
     def __getattr__(self, name):
         return self.instance.__getattribute__(name)
