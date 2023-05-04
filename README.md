@@ -1,5 +1,7 @@
+## PanML: A simplified generative AI/ML development toolkit
+
 ## Goal
-This module aims to make data analysis and code development in generative ML experimentation more accessible and useful.
+This package aims to make analysis and experimentation of generative AI/ML models more accessible, by providing a consistent layer of programmatic interface to foundation models for Data Scientists, Machine Learning Engineers and Software Developers. It's a work in progress, so very much open for collaboration and contribution. 
 
 ## Installation
 ```
@@ -59,12 +61,12 @@ print(output['probability'][:5]) # show probability of first 5 tokens in the gen
  {'token': ' can', 'probability': 0.2809840738773346}]
 ```
  
-Fine tune the model with your own data from dataframe. Execute in self-supervised autoregressive training regime
+Fine tune the model with your own data from Pandas dataframe - execute in self-supervised autoregressive training regime.
 ```
 # Specify train args
 train_args = {
     'title': 'my_tuned_gpt2',
-    'num_train_epochs' : 50,
+    'num_train_epochs' : 30,
     'mlm': False,
     'optimizer': 'adamw_torch',
     'per_device_train_batch_size': 10,
@@ -132,7 +134,7 @@ prompt_modifier = [
      "post": ""},
 ]
 
-output = modelpack.predict('What is the best way to live a healthy lifestyle?', display_probability=True, prompt_modifier=prompt_modifier)
+output = modelpack.predict('What is the best way to live a healthy lifestyle?', prompt_modifier=prompt_modifier)
 print(output['text'])
 ```
 ```
@@ -146,6 +148,7 @@ output = modelpack.embedding('What is the best way to live a healthy lifestyle?'
 print(output[:5]) # show first 5 embedding elements
 ```
 ```
+# Output
 [0.025805970653891563,
  0.007422071415930986,
  0.01738160289824009,
