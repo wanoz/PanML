@@ -16,7 +16,7 @@ from panml.models import ModelPack
 
 # Import other modules/packages as required
 import numpy as np
-import pandas as np
+import pandas as pd
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
