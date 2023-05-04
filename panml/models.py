@@ -32,17 +32,17 @@ class HuggingFaceModelPack():
                                    'output_dir', 'logging_dir', 'save_model']
         
         if self.tokenizer.pad_token is None:
-            self.tokenizer.pad_token = self.model.config.eos_token_id
+            self.tokenizer.pad_token = self.model_hf.config.eos_token_id
     
     # Embed text
     def embedding(self, text):
         token_ids = self.tokenizer.encode(text, return_tensors='pt')
         
         # Get embeddings
-        if 'flan' in self.model.name_or_path: 
-            emb = self.model.shared.weight[token_ids[0]] # embeddings for FLAN
-        elif 'gpt2' in self.model.name_or_path: 
-            emb = self.model.transformer.wte.weight[token_ids[0]] # embeddings for GPT2
+        if 'flan' in self.model_hf.name_or_path: 
+            emb = self.model_hf.shared.weight[token_ids[0]] # embeddings for FLAN
+        elif 'gpt2' in self.model_hf.name_or_path: 
+            emb = self.model_hf.transformer.wte.weight[token_ids[0]] # embeddings for GPT2
             
         emb /= emb.norm(dim=1).unsqueeze(1) # normalise embedding weights
         emb_pad = torch.zeros(self.padding_length, emb.shape[1]) # Set and apply padding to embeddings
@@ -61,7 +61,7 @@ class HuggingFaceModelPack():
         input_ids = self.tokenizer.encode(text, return_tensors='pt')
         output = self.model_hf.generate(input_ids, 
                                         max_length=max_length,
-                                        pad_token_id=self.model.config.eos_token_id,
+                                        pad_token_id=self.model_hf.config.eos_token_id,
                                         num_return_sequences=num_return_sequences, 
                                         temperature=temperature,
                                         top_p=top_p,
