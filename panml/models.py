@@ -47,7 +47,8 @@ class HuggingFaceModelPack():
         return emb_pad
     
     # Generate text
-    def predict(self, text, max_length=50, skip_special_tokens=True, display_probability=False, num_beams=3, early_stopping=True):
+    def predict(self, text, max_length=50, skip_special_tokens=True, display_probability=False, 
+                num_return_sequences=1, num_beams=3, early_stopping=True):
         output_context = {
             'text': None,
             'probability': None,
@@ -57,9 +58,9 @@ class HuggingFaceModelPack():
         output = self.model.generate(input_ids, 
                                      max_length=max_length,
                                      pad_token_id=self.model.config.eos_token_id,
+                                     num_return_sequences=num_return_sequences, 
                                      num_beams=num_beams,
                                      early_stopping=early_stopping,
-                                     num_return_sequences=1, 
                                      output_scores=display_probability, 
                                      return_dict_in_generate=display_probability, 
                                      renormalize_logits=True)
@@ -276,7 +277,8 @@ class ModelPack():
         
         # HuggingFace model call
         if self.source == 'huggingface':
-            assert self.model.config._name_or_path in self.accepted_models['huggingface'], 'model name is not included in accepted HuggingFace Hub models for this package. Included models are: ' + ' '.join(self.accepted_models['huggingface'])
+            assert self.model.config._name_or_path in self.accepted_models['huggingface'], \
+                'model name is not included in accepted HuggingFace Hub models for this package. Included models are: ' + ' '.join(self.accepted_models['huggingface'])
             assert self.tokenizer is not None, 'tokenizer required for HuggingFace Hub model'
             self.instance = HuggingFaceModelPack(self.model, 
                                                  self.tokenizer, 
@@ -284,7 +286,8 @@ class ModelPack():
                                                  self.padding_length)
         # OpenAI model call
         elif self.source == 'openai':
-            assert self.model in self.accepted_models['openai'], 'model is not included in accepted OpenAI models for this package. Included models are: ' + ' '.join(self.accepted_models['openai'])
+            assert self.model in self.accepted_models['openai'], \
+                'model is not included in accepted OpenAI models for this package. Included models are: ' + ' '.join(self.accepted_models['openai'])
             assert self.api_key is not None, 'api key has not been specified for OpenAI model call'
             self.instance = OpenAIModelPack(model=self.model, api_key=self.api_key)
                 
