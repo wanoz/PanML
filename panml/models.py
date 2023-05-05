@@ -294,10 +294,10 @@ class ModelPack():
         
         # HuggingFace Hub model call
         assert self.source in self.accepted_sources, \
-            'source not recognized. Supported sources are: ' + ' '.join([f"{s}" for s in self.accepted_sources])
+            'The specified source is not recognized. Supported sources are: ' + ' '.join([f"{s}" for s in self.accepted_sources])
         if self.source == 'huggingface':
             assert self.model in self.accepted_models['huggingface'], \
-                'model name is not included in accepted HuggingFace Hub models for this package. Included models are: ' + ' '.join([f"{m}" for m in self.accepted_models['huggingface']])
+                'The specified model is currently not supported in this package. Supported HuggingFace Hub models are: ' + ' '.join([f"{m}" for m in self.accepted_models['huggingface']])
             self.instance = HuggingFaceModelPack(self.model, self.input_block_size, self.padding_length, self.tokenizer_batch, self.source)
 
         # Locally trained model call of HuggingFace Hub model
@@ -307,7 +307,7 @@ class ModelPack():
         # OpenAI model call
         elif self.source == 'openai':
             assert self.model in self.accepted_models['openai'], \
-                'model is not included in accepted OpenAI models for this package. Included models are: ' + ' '.join([f"{m}" for m in self.accepted_models['openai']])
+                'The specified model currently is not supported in this pacckage. Supported OpenAI models are: ' + ' '.join([f"{m}" for m in self.accepted_models['openai']])
             assert self.api_key is not None, 'api key has not been specified for OpenAI model call'
             self.instance = OpenAIModelPack(model=self.model, api_key=self.api_key)
 
