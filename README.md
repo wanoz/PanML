@@ -5,6 +5,8 @@ This package aims to make analysis and experimentation of generative AI/ML model
 
 ##### *Current backend sources: HuggingFace Hub, OpenAI*
 ##### *Current supported generative AI/ML category: Language models*
+##### *Current supported evals: none yet available*
+
 
 ## Installation
 ```
