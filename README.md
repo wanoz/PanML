@@ -28,7 +28,7 @@ import torch.nn.functional as F
 ### Using HuggingFace models
 Create model pack to load model from HuggingFace Hub
 ```
-modelpack = ModelPack(model='gpt2', input_block_size=20, source='huggingface')
+modelpack = ModelPack(model='gpt2', source='huggingface', input_block_size=30)
 ```
 
 Generate output
@@ -89,7 +89,7 @@ print(output['text'])
 
 Load the locally fine tuned model for use
 ```
-new_modelpack = ModelPack(model='./results/my_tuned_gpt2/', input_block_size=20, source='local')
+new_modelpack = ModelPack(model='./results/model_my_tuned_gpt2/', source='local', input_block_size=20)
 ```
 
 ### Using OpenAI models
