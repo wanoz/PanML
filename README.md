@@ -1,7 +1,7 @@
 ## PanML: A simple generative AI/ML development toolkit
 
 ## Goal
-This package aims to make analysis and experimentation of generative AI/ML models more accessible, by providing a minimalistic programmatic interface to foundation models for Data Scientists, Machine Learning Engineers and Software Developers. It's a work in progress, so very much open for collaboration and contribution. 
+This package aims to make analysis and experimentation of generative AI/ML models more accessible, by providing a minimalistic and consistent interface to foundation models for Data Scientists, Machine Learning Engineers and Software Developers. It's a work in progress, so very much open for collaboration and contribution. 
 <br><br>
 **Current supported generative AI/ML category** <br>
 *Language models*
