@@ -18,7 +18,7 @@ class HuggingFaceModelPack():
     Generic model pack class for HuggingFace Hub models
     '''
     # Initialize class variables
-    def __init__(self, model, input_block_size, padding_length, source):
+    def __init__(self, model, input_block_size, padding_length, tokenizer_batch, source):
         if source == 'huggingface':
             self.model_hf = AutoModelForCausalLM.from_pretrained(model)
         elif source == 'local':
@@ -26,6 +26,7 @@ class HuggingFaceModelPack():
         self.tokenizer = AutoTokenizer.from_pretrained(self.model_hf.config.model_type, mirror='https://huggingface.co')
         self.padding_length = padding_length
         self.input_block_size = input_block_size
+        self.tokenizer_batch = tokenizer_batch
         self.train_default_args = ['title', 'num_train_epochs', 'optimizer', 'mlm', 
                                    'per_device_train_batch_size', 'per_device_eval_batch_size',
                                    'warmup_steps', 'weight_decay', 'logging_steps', 
@@ -91,7 +92,7 @@ class HuggingFaceModelPack():
         return self.tokenizer(examples['text'])
     
     # Tokenize pandas dataframe feature
-    def tokenize_text(self, x, batched=False):  
+    def tokenize_text(self, x, batched):  
         df_sample = pd.DataFrame({'text': x})
         hf_dataset = Dataset.from_pandas(df_sample)
         if batched:
@@ -104,8 +105,8 @@ class HuggingFaceModelPack():
     # Model training
     def fit(self, x, y, train_args={}, instruct=False):
         # Convert to tokens format from pandas dataframes
-        tokenized_data = self.tokenize_text(x)
-        tokenized_target = self.tokenize_text(y)
+        tokenized_data = self.tokenize_text(x, batched=self.tokenizer_batch)
+        tokenized_target = self.tokenize_text(y, batched=self.tokenizer_batch)
         
         # Check for missing input arguments
         assert set(list(train_args.keys())) == set(self.train_default_args), \
@@ -253,6 +254,7 @@ class ModelPack():
                  tokenizer=None, 
                  input_block_size=10, 
                  padding_length=100, 
+                 tokenizer_batch=False,
                  source='huggingface', 
                  api_key=None):
         
@@ -260,6 +262,7 @@ class ModelPack():
         self.tokenizer = tokenizer
         self.model = model
         self.input_block_size = input_block_size
+        self.tokenizer_batch = tokenizer_batch
         self.source = source
         self.api_key = api_key
         
@@ -290,15 +293,16 @@ class ModelPack():
         ]
         
         # HuggingFace Hub model call
-        assert self.source in self.accepted_sources, 'source not recognized. Supported sources are: ' + ' '.join([f"{s}" for s in self.accepted_sources])
+        assert self.source in self.accepted_sources, \
+            'source not recognized. Supported sources are: ' + ' '.join([f"{s}" for s in self.accepted_sources])
         if self.source == 'huggingface':
             assert self.model in self.accepted_models['huggingface'], \
                 'model name is not included in accepted HuggingFace Hub models for this package. Included models are: ' + ' '.join([f"{m}" for m in self.accepted_models['huggingface']])
-            self.instance = HuggingFaceModelPack(self.model, self.input_block_size, self.padding_length, self.source)
+            self.instance = HuggingFaceModelPack(self.model, self.input_block_size, self.padding_length, self.tokenizer_batch, self.source)
 
         # Locally trained model call of HuggingFace Hub model
         elif self.source == 'local':
-            self.instance = HuggingFaceModelPack(self.model, self.input_block_size, self.padding_length, self.source)
+            self.instance = HuggingFaceModelPack(self.model, self.input_block_size, self.padding_length, self.tokenizer_batch, self.source)
 
         # OpenAI model call
         elif self.source == 'openai':
