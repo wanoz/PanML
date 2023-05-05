@@ -34,7 +34,7 @@ import torch.nn.functional as F
 ...
 ```
 
-### Using HuggingFace models
+### Using open source models from HuggingFace Hub
 Create model pack to load model from HuggingFace Hub
 ```
 lm = ModelPack(model='gpt2', source='huggingface', input_block_size=30)
@@ -101,7 +101,7 @@ Load the locally fine tuned model for use
 new_lm = ModelPack(model='./results/model_my_tuned_gpt2/', source='local', input_block_size=20)
 ```
 
-### Using OpenAI models
+### Using models from OpenAI
 Create model pack from OpenAI model description and API key
 ```
 lm = ModelPack(model='text-davinci-002', source='openai', api_key=<your_openai_key>)
