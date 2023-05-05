@@ -31,12 +31,12 @@ import torch.nn.functional as F
 ### Using HuggingFace models
 Create model pack to load model from HuggingFace Hub
 ```
-modelpack = ModelPack(model='gpt2', source='huggingface', input_block_size=30)
+lm = ModelPack(model='gpt2', source='huggingface', input_block_size=30)
 ```
 
 Generate output
 ```
-output = modelpack.predict('hello world is')
+output = lm.predict('hello world is')
 print(output['text'])
 ```
 ```
@@ -46,7 +46,7 @@ print(output['text'])
 
 Show probability of output token
 ```
-output = modelpack.predict('hello world is', display_probability=True)
+output = lm.predict('hello world is', display_probability=True)
 print(output['probability'][:5]) # show probability of first 5 tokens in the generated output that follows the provided context
 ```
 ```
@@ -81,29 +81,29 @@ x = df['some_text']
 y = x
 
 # Train model
-modelpack.fit(x, y, train_args, instruct=False)
+lm.fit(x, y, train_args, instruct=False)
 ```
 
 Generate output with the fine tuned model
 ```
-output = modelpack.predict('hello world is', display_probability=True)
+output = lm.predict('hello world is', display_probability=True)
 print(output['text'])
 ```
 
 Load the locally fine tuned model for use
 ```
-new_modelpack = ModelPack(model='./results/model_my_tuned_gpt2/', source='local', input_block_size=20)
+new_lm = ModelPack(model='./results/model_my_tuned_gpt2/', source='local', input_block_size=20)
 ```
 
 ### Using OpenAI models
 Create model pack from OpenAI model description and API key
 ```
-modelpack = ModelPack(model='text-davinci-002', source='openai', api_key=<your_openai_key>)
+lm = ModelPack(model='text-davinci-002', source='openai', api_key=<your_openai_key>)
 ```
 
 Generate output
 ```
-output = modelpack.predict('What is the best way to live a healthy lifestyle?')
+output = lm.predict('What is the best way to live a healthy lifestyle?')
 output['text']
 ```
 ```
@@ -136,7 +136,7 @@ prompt_modifier = [
      "post": ""},
 ]
 
-output = modelpack.predict('What is the best way to live a healthy lifestyle?', prompt_modifier=prompt_modifier)
+output = lm.predict('What is the best way to live a healthy lifestyle?', prompt_modifier=prompt_modifier)
 print(output['text'])
 ```
 ```
@@ -146,7 +146,7 @@ print(output['text'])
 
 Generate embedding
 ```
-output = modelpack.embedding('What is the best way to live a healthy lifestyle?')
+output = lm.embedding('What is the best way to live a healthy lifestyle?')
 print(output[:5]) # show first 5 embedding elements
 ```
 ```
