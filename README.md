@@ -7,7 +7,7 @@ This package aims to make analysis and experimentation of generative AI/ML model
 *Language models*
 <br><br>
 **Current supported foundation models** <br>
-*GPT-2, FLAN-T5, Cerebras models from Open Source collections at [HuggingFace Hub](https://huggingface.co)* <br>
+*GPT-2, FLAN-T5, Cerebras models from open source collections at [HuggingFace Hub](https://huggingface.co)* <br>
 *GPT-3.5 completions models/text-davinci-002, text-davinci-003 from [OpenAI](https://openai.com)*
 <br><br>
 **Current supported evals** <br>
