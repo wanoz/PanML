@@ -3,9 +3,12 @@
 ## Goal
 This package aims to make analysis and experimentation of generative AI/ML models more accessible, by providing a consistent layer of programmatic interface to foundation models for Data Scientists, Machine Learning Engineers and Software Developers. It's a work in progress, so very much open for collaboration and contribution. 
 
-###### Current supported generative AI/ML category: Language Models
-###### Current supported foundation models: GPT-2, FLAN-T5, Cerebras models from [HuggingFace Hub](https://huggingface.co), GPT-3.5 completions models/text-davinci-002, text-davinci-003 from [OpenAI](https://openai.com)
-###### Current supported evals: coming later...
+##### Current supported generative AI/ML category: 
+###### Language Models
+##### Current supported foundation models: 
+###### GPT-2, FLAN-T5, Cerebras models from [HuggingFace Hub](https://huggingface.co), GPT-3.5 completions models/text-davinci-002, text-davinci-003 from [OpenAI](https://openai.com)
+##### Current supported evals: 
+###### Coming later...
 
 
 ## Installation
