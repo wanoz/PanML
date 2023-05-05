@@ -119,7 +119,7 @@ output['text']
 
 Show probability of output token
 ```
-output = modelpack.predict('What is the best way to live a healthy lifestyle?', display_probability=True)
+output = lm.predict('What is the best way to live a healthy lifestyle?', display_probability=True)
 print(output['probability'][:5]) # show probability of first 5 tokens in the generated output that follows the provided context
 ```
 ```
