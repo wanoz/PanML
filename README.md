@@ -4,7 +4,7 @@
 This package aims to make analysis and experimentation of generative AI/ML models more accessible, by providing a simple and consistent interface to foundation models for Data Scientists, Machine Learning Engineers and Software Developers. It's a work in progress, so very much open for collaboration and contribution. 
 <br><br>
 **Current supported generative AI/ML category** <br>
-*Language models (fine tuning, prompt engineering, prompt tuning)*
+*Language models (fine tuning, prompt engineering, prompt tuning, model evaluation)*
 <br><br>
 **Current supported foundation models** <br>
 *GPT-2, FLAN-T5, Cerebras, StabilityAI language models from open source collections in [HuggingFace Hub](https://huggingface.co)* <br>
