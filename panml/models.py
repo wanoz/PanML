@@ -42,7 +42,7 @@ class HuggingFaceModelPack():
         # Get embeddings
         if 'flan' in self.model_hf.name_or_path: 
             emb = self.model_hf.shared.weight[token_ids[0]] # embeddings for FLAN
-        elif ('gpt2' in self.model_hf.name_or_path) or ('Cerebras-GPT' in self.model_hf.name_or_path): 
+        else: 
             emb = self.model_hf.transformer.wte.weight[token_ids[0]] # embeddings for GPT2
             
         emb /= emb.norm(dim=1).unsqueeze(1) # normalise embedding weights
@@ -286,6 +286,10 @@ class ModelPack():
                 'cerebras/Cerebras-GPT-2.7B',
                 'cerebras/Cerebras-GPT-6.7B',
                 'cerebras/Cerebras-GPT-13B',
+                'StabilityAI/stablelm-base-alpha-3b',
+                'StabilityAI/stablelm-base-alpha-7b',
+                'StabilityAI/stablelm-tuned-alpha-3b',
+                'StabilityAI/stablelm-tuned-alpha-7b',
             ],
             'openai': [
                 'text-davinci-002', 
