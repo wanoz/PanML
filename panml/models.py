@@ -42,7 +42,7 @@ class HuggingFaceModelPack():
         # Get embeddings
         if 'flan' in self.model_hf.name_or_path: 
             emb = self.model_hf.shared.weight[token_ids[0]] # embeddings for FLAN
-        elif 'gpt2' in self.model_hf.name_or_path: 
+        elif ('gpt2' in self.model_hf.name_or_path) or ('Cerebras-GPT' in self.model_hf.name_or_path): 
             emb = self.model_hf.transformer.wte.weight[token_ids[0]] # embeddings for GPT2
             
         emb /= emb.norm(dim=1).unsqueeze(1) # normalise embedding weights
@@ -278,6 +278,13 @@ class ModelPack():
                 'google/flan-t5-large',
                 'google/flan-t5-xl',
                 'google/flan-t5-xxl',
+                'cerebras/Cerebras-GPT-111M',
+                'cerebras/Cerebras-GPT-256M',
+                'cerebras/Cerebras-GPT-590M',
+                'cerebras/Cerebras-GPT-1.3B',
+                'cerebras/Cerebras-GPT-2.7B',
+                'cerebras/Cerebras-GPT-6.7B',
+                'cerebras/Cerebras-GPT-13B',
             ],
             'openai': [
                 'text-davinci-002', 
