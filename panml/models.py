@@ -27,7 +27,7 @@ class HuggingFaceModelPack():
                 self.model_hf = AutoModelForSeq2SeqLM.from_pretrained(model, local_files_only=True)
             else:
                 self.model_hf = AutoModelForCausalLM.from_pretrained(model, local_files_only=True)
-        self.tokenizer = AutoTokenizer.from_pretrained(self.model_hf.config.model_type, mirror='https://huggingface.co')
+        self.tokenizer = AutoTokenizer.from_pretrained(self.model_hf.config.tokenizer_class.lower().replace('tokenizer', ''), mirror='https://huggingface.co')
         self.padding_length = padding_length
         self.input_block_size = input_block_size
         self.tokenizer_batch = tokenizer_batch
