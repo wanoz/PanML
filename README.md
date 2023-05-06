@@ -133,7 +133,6 @@ print(output['probability'][:5]) # show probability of first 5 tokens in the gen
 
 Generate output in prompt modified loop (using a prompt modifier) <br>
 ```
-# Specify/design a prompt modifier
 prompt_modifier = [
     {"pre": "You are a mother", 
      "post": ""},
