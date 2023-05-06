@@ -145,7 +145,7 @@ prompt_modifier = [
 output = lm.predict('What is the best way to live a healthy lifestyle?', prompt_modifier=prompt_modifier)
 print(output['text'])
 ```
-###### *Note: A prompt modifier is basically a list where each item specifies text to be prepended (attached before) and/or appended (attched after) the query/prompt. For example, the texts in first item of list will be prepended/appended to the initial query/prompt, and the texts of the second item in the list will be prepended/appended to the returned LLM response, and the resulting follow-up query/prompt will then be automatically issued to the LLM. This repeats recursively equal to the number of items in the specified prompt modifier list - essentially a method of "chaining" a series of prompts and response patterns to LLM to produce a desirable final output.*
+###### *Note: A prompt modifier is basically a list where each item specifies text to be prepended (attached before) and/or appended (attched after) the query/prompt. For example, the texts in first item of list will be prepended/appended to the initial query/prompt, and the texts of the second item in the list will be prepended/appended to the returned LLM response, and the resulting follow-up query/prompt will then be automatically issued to the LLM. This repeats recursively covering all of the modifiers in the prompt modifier list - it is essentially a method of "chaining" a series of prompts and response patterns to LLM to produce a desirable final output.*
 ```
 # Output
 '\n\nTo live a healthy lifestyle, individuals should eat a variety of healthy foods, exercise regularly, get enough sleep, and avoid tobacco products, excessive alcohol, and other drugs.'
