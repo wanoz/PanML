@@ -1,4 +1,3 @@
-import math
 import numpy as np
 import pandas as pd
 import torch
@@ -27,7 +26,10 @@ class HuggingFaceModelPack():
                 self.model_hf = AutoModelForSeq2SeqLM.from_pretrained(model, local_files_only=True)
             else:
                 self.model_hf = AutoModelForCausalLM.from_pretrained(model, local_files_only=True)
-        self.tokenizer = AutoTokenizer.from_pretrained(self.model_hf.config.tokenizer_class.lower().replace('tokenizer', ''), mirror='https://huggingface.co')
+        if self.model_hf.config.tokenizer_class:
+            self.tokenizer = AutoTokenizer.from_pretrained(self.model_hf.config.tokenizer_class.lower().replace('tokenizer', ''), mirror='https://huggingface.co')
+        else:
+            self.tokenizer = AutoTokenizer.from_pretrained(self.model_hf.config.model_type, mirror='https://huggingface.co')
         self.padding_length = padding_length
         self.input_block_size = input_block_size
         self.tokenizer_batch = tokenizer_batch
@@ -57,7 +59,7 @@ class HuggingFaceModelPack():
     
     # Generate text
     def predict(self, text, max_length=50, skip_special_tokens=True, display_probability=False, 
-                num_return_sequences=1, temperature=0.8, top_p=0.8, top_k=0, num_beams=3, no_repeat_ngram_size=3, early_stopping=True):
+                num_return_sequences=1, temperature=0.8, top_p=0.8, top_k=0, no_repeat_ngram_size=3):
         output_context = {
             'text': None,
             'probability': None,
@@ -71,9 +73,7 @@ class HuggingFaceModelPack():
                                         temperature=temperature,
                                         top_p=top_p,
                                         top_k=top_k,
-                                        num_beams=num_beams,
                                         no_repeat_ngram_size=no_repeat_ngram_size,
-                                        early_stopping=early_stopping,
                                         output_scores=display_probability, 
                                         return_dict_in_generate=display_probability, 
                                         renormalize_logits=True)
@@ -82,8 +82,8 @@ class HuggingFaceModelPack():
         if display_probability:
             output_context['text'] = self.tokenizer.decode(output['sequences'][0], skip_special_tokens=skip_special_tokens)
             output_context['probability'] = [
-                {'token': self.tokenizer.decode(torch.argmax(math.e**(s)).item()), 
-                 'probability': torch.max(math.e**(s)).item()} for s in output['scores']
+                {'token': self.tokenizer.decode(torch.argmax(torch.exp(s)).item()), 
+                 'probability': torch.max(torch.exp(s)).item()} for s in output['scores']
             ]
         else:
             output_context['text'] = self.tokenizer.decode(output[0], skip_special_tokens=skip_special_tokens)
@@ -209,7 +209,7 @@ class OpenAIModelPack():
         if display_probability:
             tokens = response["choices"][0]['logprobs']['tokens']
             token_logprobs = response["choices"][0]['logprobs']['token_logprobs']
-            output_context['probability'] = [{'token': token, 'probability': math.e**logprob} for token, logprob in zip(tokens, token_logprobs)]
+            output_context['probability'] = [{'token': token, 'probability': torch.exp(logprob)} for token, logprob in zip(tokens, token_logprobs)]
 
         return output_context
     
