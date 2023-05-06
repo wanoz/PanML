@@ -274,10 +274,10 @@ class ModelPack():
         # Accepted models from sources
         self.accepted_models = {
             'huggingface': [
+                'distilgpt2', 
                 'gpt2',
                 'gpt2-medium',
                 'gpt2-xl',
-                'distilgpt2', 
                 'google/flan-t5-base',
                 'google/flan-t5-small',
                 'google/flan-t5-large',
