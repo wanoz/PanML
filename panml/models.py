@@ -296,6 +296,8 @@ class ModelPack():
                 'StabilityAI/stablelm-base-alpha-7b',
                 'StabilityAI/stablelm-tuned-alpha-3b',
                 'StabilityAI/stablelm-tuned-alpha-7b',
+                'Salesforce/codegen-350M-multi',
+                'Salesforce/codegen-2B-multi',
             ],
             'openai': [
                 'text-davinci-002', 
