@@ -132,8 +132,7 @@ print(output['probability'][:5]) # show probability of first 5 tokens in the gen
 ```
 
 Generate output in prompt modified loop (using a prompt modifier) <br>
-This is a list where each item is a prompt instruction to added pre (attached before) and/or post (attched after) the query/prompt
-For example, the first item of pre/post values would be added to the initial query/prompt, and the second item of the pre/post values would be added to the returned LLM response, and the resulting follow-up query/prompt would be automatically sent to the LLM. This repeats for the number of items specified in the prompt modifier list - essentially a method of "chaining" a pattern of prompts and responses to LLMs together in a looped manner.
+###### Note: this is a list where each item is a prompt instruction to added pre (attached before) and/or post (attched after) the query/prompt. For example, the first item of pre/post values would be added to the initial query/prompt, and the second item of the pre/post values would be added to the returned LLM response, and the resulting follow-up query/prompt would be automatically sent to the LLM. This repeats for the number of items specified in the prompt modifier list - essentially a method of "chaining" a pattern of prompts and responses to LLMs together in a looped manner.
 ```
 # Specify/design a prompt modifier
 prompt_modifier = [
