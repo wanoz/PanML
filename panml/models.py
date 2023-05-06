@@ -1,6 +1,4 @@
-import os
 import math
-import json
 import numpy as np
 import pandas as pd
 import torch
@@ -20,9 +18,15 @@ class HuggingFaceModelPack():
     # Initialize class variables
     def __init__(self, model, input_block_size, padding_length, tokenizer_batch, source):
         if source == 'huggingface':
-            self.model_hf = AutoModelForCausalLM.from_pretrained(model)
+            if 'flan' in model:
+                self.model_hf = AutoModelForSeq2SeqLM.from_pretrained(model)
+            else:
+                self.model_hf = AutoModelForCausalLM.from_pretrained(model)
         elif source == 'local':
-            self.model_hf = AutoModelForCausalLM.from_pretrained(model, local_files_only=True)
+            if 'flan' in model:
+                self.model_hf = AutoModelForSeq2SeqLM.from_pretrained(model, local_files_only=True)
+            else:
+                self.model_hf = AutoModelForCausalLM.from_pretrained(model, local_files_only=True)
         self.tokenizer = AutoTokenizer.from_pretrained(self.model_hf.config.model_type, mirror='https://huggingface.co')
         self.padding_length = padding_length
         self.input_block_size = input_block_size
@@ -110,8 +114,8 @@ class HuggingFaceModelPack():
         tokenized_target = self.tokenize_text(y, batched=self.tokenizer_batch)
         
         # Check for missing input arguments
-        assert set(list(train_args.keys())) == set(self.train_default_args), \
-            f'Train args are not in the required format - missing: {", ".join(list(set(self.train_default_args) - set(list(train_args.keys()))))}'
+        if set(list(train_args.keys())) != set(self.train_default_args):
+            raise ValueError(f'Train args are not in the required format - missing: {", ".join(list(set(self.train_default_args) - set(list(train_args.keys()))))}')
         
         if instruct:
             print('Setting up training in sequence to sequence format...')
@@ -286,6 +290,8 @@ class ModelPack():
                 'cerebras/Cerebras-GPT-2.7B',
                 'cerebras/Cerebras-GPT-6.7B',
                 'cerebras/Cerebras-GPT-13B',
+                'EleutherAI/gpt-neo-2.7B',
+                'EleutherAI/gpt-j-6B',
                 'StabilityAI/stablelm-base-alpha-3b',
                 'StabilityAI/stablelm-base-alpha-7b',
                 'StabilityAI/stablelm-tuned-alpha-3b',
@@ -305,11 +311,11 @@ class ModelPack():
         ]
         
         # HuggingFace Hub model call
-        assert self.source in self.accepted_sources, \
-            'The specified source is not recognized. Supported sources are: ' + ' '.join([f"{s}" for s in self.accepted_sources])
+        if self.source not in self.accepted_sources:
+            raise ValueError('The specified source is not recognized. Supported sources are: ' + ' '.join([f"{s}" for s in self.accepted_sources]))
         if self.source == 'huggingface':
-            assert self.model in self.accepted_models['huggingface'], \
-                'The specified model is currently not supported in this package. Supported HuggingFace Hub models are: ' + ' '.join([f"{m}" for m in self.accepted_models['huggingface']])
+            if self.model not in self.accepted_models['huggingface']:
+                raise ValueError('The specified model is currently not supported in this package. Supported HuggingFace Hub models are: ' + ' '.join([f"{m}" for m in self.accepted_models['huggingface']]))
             self.instance = HuggingFaceModelPack(self.model, self.input_block_size, self.padding_length, self.tokenizer_batch, self.source)
 
         # Locally trained model call of HuggingFace Hub model
@@ -318,20 +324,19 @@ class ModelPack():
 
         # OpenAI model call
         elif self.source == 'openai':
-            assert self.model in self.accepted_models['openai'], \
-                'The specified model currently is not supported in this pacckage. Supported OpenAI models are: ' + ' '.join([f"{m}" for m in self.accepted_models['openai']])
-            assert self.api_key is not None, 'api key has not been specified for OpenAI model call'
+            if self.model not in self.accepted_models['openai']:
+                raise ValueError('The specified model currently is not supported in this pacckage. Supported OpenAI models are: ' + ' '.join([f"{m}" for m in self.accepted_models['openai']]))
+            if self.api_key is None:
+                raise ValueError('api key has not been specified for OpenAI model call')
             self.instance = OpenAIModelPack(model=self.model, api_key=self.api_key)
 
     # Direct to the attribute ofthe sub model pack class (attribute not found in the main model pack class)
     def __getattr__(self, name):
         return self.instance.__getattribute__(name)
     
-    
 # Set device type
 def set_device():
-    device_type = 'cuda' if torch.cuda.is_available() else 'cpu'
-    return device_type
+    return 'cuda' if torch.cuda.is_available() else 'cpu'
 
 # Calculate cosine similarity of two matrices    
 def cosine_similarity(m1, m2):

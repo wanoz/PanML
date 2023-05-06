@@ -7,7 +7,7 @@ This package aims to make analysis and experimentation of generative AI/ML model
 *Language models (fine tuning, prompt engineering, prompt tuning, model evaluation)*
 <br><br>
 **Current supported foundation models** <br>
-*GPT-2, FLAN-T5, Cerebras, StabilityAI language models from open source collections in [HuggingFace Hub](https://huggingface.co)* <br>
+*GPT-2, FLAN-T5, EleutherAI, Cerebras, StabilityAI language models from open source collections in [HuggingFace Hub](https://huggingface.co)* <br>
 *GPT-3.5 base language completions models/text-davinci-002, text-davinci-003 from [OpenAI](https://openai.com)*
 <br><br>
 **Current supported evals** <br>
