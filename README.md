@@ -134,19 +134,18 @@ print(output['probability'][:5]) # show probability of first 5 tokens in the gen
 Generate output in prompt modified loop (using a prompt modifier) <br>
 ```
 prompt_modifier = [
-    {"pre": "You are a mother", 
-     "post": ""},
-    {"pre": "breakdown into further details", 
-     "post": ""},
-    {"pre": "summarise to answer the original question", 
-     "post": ""},
+    {"prepend": "You are a mother", 
+     "append": ""},
+    {"prepend": "breakdown into further details", 
+     "append": ""},
+    {"prepend": "summarise to answer the original question", 
+     "append": ""},
 ]
 
 output = lm.predict('What is the best way to live a healthy lifestyle?', prompt_modifier=prompt_modifier)
 print(output['text'])
 ```
-###### *Note: A prompt modifier is basically a list where each item specifies the text to be added pre (attached before) and/or post (attched after) the query/prompt. For example, the first item of pre/post values will be added to the initial query/prompt, and the second item of the pre/post values will be added to the returned LLM response, and the resulting follow-up query/prompt will then be automatically sent to the LLM. This repeats for the number of items specified in the prompt modifier list - essentially a method of "chaining" a pattern of prompts and responses to LLMs together in a looped manner.*
-
+###### *Note: A prompt modifier is basically a list where each item specifies text to be prepended (attached before) and/or appended (attched after) the query/prompt. For example, the texts in first item of list will be prepended/appended to the initial query/prompt, and the texts of the second item in the list will be prepended/appended to the returned LLM response, and the resulting follow-up query/prompt will then be automatically issued to the LLM. This repeats recursively equal to the number of items in the specified prompt modifier list - essentially a method of "chaining" a series of prompts and response patterns to LLM to produce a desirable final output.*
 ```
 # Output
 '\n\nTo live a healthy lifestyle, individuals should eat a variety of healthy foods, exercise regularly, get enough sleep, and avoid tobacco products, excessive alcohol, and other drugs.'

@@ -215,7 +215,7 @@ class OpenAIModelPack():
     
     # Generate text in prompt loop
     def predict(self, text, temperature=0, max_tokens=100, top_p=1, n=3, frequency_penalty=0, presence_penalty=0, 
-                display_probability=False, logprobs=1, prompt_modifier=[{'pre': '', 'post': ''}], keep_last=True):
+                display_probability=False, logprobs=1, prompt_modifier=[{'prepend': '', 'append': ''}], keep_last=True):
         
         # Create loop for text prediction
         response_words = 0
@@ -223,7 +223,7 @@ class OpenAIModelPack():
         for count, mod in enumerate(prompt_modifier):
             if count > 0:
                 text = output_context['text']
-            text = f"{mod['pre']} \n {text} \n {mod['post']}"
+            text = f"{mod['prepend']} \n {text} \n {mod['append']}"
             output_context = self._predict(self.model, text, temperature=temperature, max_tokens=max_tokens, top_p=top_p,
                                            n=n, frequency_penalty=frequency_penalty, presence_penalty=presence_penalty,
                                            display_probability=display_probability, logprobs=logprobs)
