@@ -135,7 +135,7 @@ class HuggingFaceModelPack():
                 logging_dir=train_args['logging_dir'], # log directory
             )
 
-            trainer = Trainer(
+            trainer = Seq2SeqTrainer(
                 model=self.model_hf,
                 args=training_args,
                 train_dataset=tokenized_data.remove_columns(['text']),
@@ -160,7 +160,7 @@ class HuggingFaceModelPack():
                 logging_dir=train_args['logging_dir'], 
             )
             
-            trainer = Seq2SeqTrainer(
+            trainer = Trainer(
                 model=self.model_hf,
                 args=training_args,
                 train_dataset=tokenized_data.remove_columns(['text']),
