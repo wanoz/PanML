@@ -209,7 +209,7 @@ class OpenAIModelPack():
         if display_probability:
             tokens = response["choices"][0]['logprobs']['tokens']
             token_logprobs = response["choices"][0]['logprobs']['token_logprobs']
-            output_context['probability'] = [{'token': token, 'probability': torch.exp(logprob)} for token, logprob in zip(tokens, token_logprobs)]
+            output_context['probability'] = [{'token': token, 'probability': torch.exp(torch.Tensor([logprob]))} for token, logprob in zip(tokens, token_logprobs)]
 
         return output_context
     
