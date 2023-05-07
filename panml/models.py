@@ -221,9 +221,18 @@ class OpenAIModelPack():
         response_words = 0
         history = []
         for count, mod in enumerate(prompt_modifier):
+            # Set prepend or append to empty str if there is no input for these
+            if 'prepend' not in mod: 
+                mod['prepend'] = ''
+            if 'append' not in mod:
+                mod['append'] = ''
+
+            # Set the query text to previous output to carry on the prompt loop
             if count > 0:
                 text = output_context['text']
             text = f"{mod['prepend']} \n {text} \n {mod['append']}"
+
+            # Call model for text generation
             output_context = self._predict(self.model, text, temperature=temperature, max_tokens=max_tokens, top_p=top_p,
                                            n=n, frequency_penalty=frequency_penalty, presence_penalty=presence_penalty,
                                            display_probability=display_probability, logprobs=logprobs)
