@@ -250,14 +250,14 @@ class OpenAIModelPack():
             return history # returns all historical prediction output
         
     # Generate and execute code using (LM powered function)
-    def predict_code(self, text, x, language='python'):
+    def predict_code(self, text, x, language='python', max_tokens=500):
         if self.model != 'text-davinci-002':
             raise ValueError(f"The specified model is '{self.model}'. Only 'text-davinci-002' is supported in this package for code generation")
         
         input_vars = f"x, y = {x}, None" # Set input and output variables
         prompt_prepend = f'Write {language} code to only produce function and input variable x, then call the function without print, without enter input:'
         prompt_append = 'of variable x and return output in y' # Set prompt
-        output_context = self.predict(f'{prompt_prepend} {text} {prompt_append}', max_tokens=500) # Get predicted code snippet
+        output_context = self.predict(f'{prompt_prepend} {text} {prompt_append}', max_tokens=max_tokens) # Get predicted code snippet
         code_context = f"{input_vars}\n{output_context['text']}" # Create code context
         return code_context
         
@@ -293,7 +293,7 @@ class ModelPack():
         self.api_key = api_key
         
         # Accepted models from sources
-        self.accepted_models = {
+        self.supported_models = {
             'huggingface': [
                 'distilgpt2', 
                 'gpt2',
@@ -329,18 +329,18 @@ class ModelPack():
         }
 
         # Accepted source descriptions
-        self.accepted_sources = [
+        self.supported_sources = [
             'huggingface', 
             'local', 
             'openai',
         ]
         
         # HuggingFace Hub model call
-        if self.source not in self.accepted_sources:
-            raise ValueError('The specified source is not recognized. Supported sources are: ' + ' '.join([f"{s}" for s in self.accepted_sources]))
+        if self.source not in self.supported_sources:
+            raise ValueError('The specified source is not recognized. Supported sources are: ' + ' '.join([f"{s}" for s in self.supported_sources]))
         if self.source == 'huggingface':
-            if self.model not in self.accepted_models['huggingface']:
-                raise ValueError('The specified model is currently not supported in this package. Supported HuggingFace Hub models are: ' + ' '.join([f"{m}" for m in self.accepted_models['huggingface']]))
+            if self.model not in self.supported_models['huggingface']:
+                raise ValueError('The specified model is currently not supported in this package. Supported HuggingFace Hub models are: ' + ' '.join([f"{m}" for m in self.supported_models['huggingface']]))
             self.instance = HuggingFaceModelPack(self.model, self.input_block_size, self.padding_length, self.tokenizer_batch, self.source)
 
         # Locally trained model call of HuggingFace Hub model
@@ -349,8 +349,8 @@ class ModelPack():
 
         # OpenAI model call
         elif self.source == 'openai':
-            if self.model not in self.accepted_models['openai']:
-                raise ValueError('The specified model currently is not supported in this pacckage. Supported OpenAI models are: ' + ' '.join([f"{m}" for m in self.accepted_models['openai']]))
+            if self.model not in self.supported_models['openai']:
+                raise ValueError('The specified model currently is not supported in this pacckage. Supported OpenAI models are: ' + ' '.join([f"{m}" for m in self.supported_models['openai']]))
             if self.api_key is None:
                 raise ValueError('api key has not been specified for OpenAI model call')
             self.instance = OpenAIModelPack(model=self.model, api_key=self.api_key)
