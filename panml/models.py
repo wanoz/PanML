@@ -257,7 +257,7 @@ class OpenAIModelPack():
         input_vars = f"x, y = {x}, None" # Set input and output variables
         prompt_prepend = f'Write {language} code to only produce function and input variable x, then call the function without print, without enter input:'
         prompt_append = 'of variable x and return output in y' # Set prompt
-        output_context = self.predict(f'{prompt_prepend} {text} {prompt_append}', max_tokens=300) # Get predicted code snippet
+        output_context = self.predict(f'{prompt_prepend} {text} {prompt_append}', max_tokens=500) # Get predicted code snippet
         code_context = f"{input_vars}\n{output_context['text']}" # Create code context
         return code_context
         
