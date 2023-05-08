@@ -317,6 +317,8 @@ class ModelPack():
                 'StabilityAI/stablelm-base-alpha-7b',
                 'StabilityAI/stablelm-tuned-alpha-3b',
                 'StabilityAI/stablelm-tuned-alpha-7b',
+                'h2oai/h2ogpt-oasst1-512-12b',
+                'h2oai/h2ogpt-oasst1-512-20b',
                 'Salesforce/codegen-350M-multi',
                 'Salesforce/codegen-2B-multi',
             ],
