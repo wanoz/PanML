@@ -249,6 +249,29 @@ class OpenAIModelPack():
         else:
             return history # returns all historical prediction output
         
+    # Generate and execute code using (LM powered function)
+    def predict_enact(self, text, x, language='python', display_code=False):
+        if self.model != 'text-davinci-002':
+            raise ValueError(f"The specified model is '{self.model}'. Only 'text-davinci-002' is supported in this package for code generation")
+        
+        output = {
+            'value': None,
+            'code': None,
+        }
+        input_vars = f"x = {x}" # Set input variable string
+        y = None # Set output variable
+        prompt_prepend = f'Write {language} code to only produce function and input variable x, then call the function without print, without enter input:'
+        prompt_append = 'of variable x and return output in y' # Set prompt
+        output_context = self.predict(f'{prompt_prepend} {text} {prompt_append}', max_tokens=300) # Get predicted code snippet
+        code_context = f"{input_vars}\n{output_context['text']}" # Create code context
+        
+        # Execute code
+        exec(code_context, globals())
+        output['value'] = y
+        if display_code:
+            output['code'] = code_context # Return code context if required
+        return output
+        
     # Embed text
     def embedding(self, text, model=None):
         text = text.replace("\n", " ")
