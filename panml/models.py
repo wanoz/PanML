@@ -181,7 +181,7 @@ class OpenAIModelPack():
     def __init__(self, model, api_key):
         self.model = model
         self.model_embedding = 'text-embedding-ada-002'
-        openai.key = api_key
+        openai.api_key = api_key
     
     # Generate text of single model call
     @staticmethod
