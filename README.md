@@ -164,3 +164,28 @@ print(output[:5]) # show first 5 embedding elements
  -0.006787706166505814,
  -0.003324073040857911]
 ```
+
+Autogenerate and execute code
+```
+code = lm.predict_code('calculate the fibonacci sequence using input', x=19, language='python')
+print(code)
+exec(code)
+print(f'\nAnswer: {y}')
+```
+```
+x, y = 19, None
+
+def Fibonacci(x): 
+    if x<0: 
+        print("Incorrect input") 
+    elif x==1: 
+        return 0
+    elif x==2: 
+        return 1
+    else: 
+        return Fibonacci(x-1)+Fibonacci(x-2) 
+
+y = Fibonacci(x)
+
+Answer: 2584
+```
