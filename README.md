@@ -133,22 +133,19 @@ print(output['probability'][:5]) # show probability of first 5 tokens in the gen
 
 Generate output in prompt modified loop (using a prompt modifier) <br>
 ```
-prompt_modifier = [
-    {"prepend": "You are a mother", 
-     "append": ""},
-    {"prepend": "breakdown into further details", 
-     "append": ""},
-    {"prepend": "summarise to answer the original question", 
-     "append": ""},
+prompts = [
+    {'prepend': 'you are a sports coach'},
+    {'prepend': 'produce a daily exercise plan for one week'},
+    {'prepend': 'summarise to the original question'},
 ]
 
-output = lm.predict('What is the best way to live a healthy lifestyle?', prompt_modifier=prompt_modifier)
-print(output['text'])
+output = lm.predict('What is the best way to live a healthy lifestyle?', prompt_modifier=prompts, max_tokens=600)
+output['text']
 ```
 ###### *Note: A prompt modifier is basically a list where each item specifies text to be prepended (attached before) and/or appended (attched after) the query/prompt. For example, the texts in first item of list will be prepended/appended to the initial query/prompt, and the texts of the second item in the list will be prepended/appended to the returned LLM response, and the resulting follow-up query/prompt will then be automatically issued to the LLM. This repeats recursively covering all of the modifiers in the prompt modifier list - it is essentially a method of "chaining" a series of prompts and response patterns to LLM to produce a desirable final output.*
 ```
 # Output
-'\n\nTo live a healthy lifestyle, individuals should eat a variety of healthy foods, exercise regularly, get enough sleep, and avoid tobacco products, excessive alcohol, and other drugs.'
+'\nAssuming you are starting from a sedentary lifestyle, a good goal to aim for is 30 minutes of moderate-intensity exercise most days of the week. This could include brisk walking, biking, swimming, or using a elliptical trainer. Start with whatever you feel comfortable with and gradually increase your time and intensity as you get more fit. Remember to warm up and cool down for 5-10 minutes before and after your workout. In addition to aerobic exercise, it is also important to include strength training in your routine. Strength-training not only helps to tone your body, but can also help to reduce your risk of injuries in the future. A simple way to start strength-training is to use your own body weight for resistance. Try doing push-ups, sit-ups, and squats. As you get stronger, you can add weight by using dumbbells or resistance bands. Aim for two to three days of strength-training per week. Finally, be sure to get enough sleep each night. Most adults need 7-8 hours of sleep per night. Getting enough sleep will help your body to recover from your workouts and will also help to reduce stress levels.'
 ```
 
 Generate embedding
@@ -167,13 +164,14 @@ print(output[:5]) # show first 5 embedding elements
 
 Autogenerate and execute code
 ```
-code = lm.predict_code('calculate the fibonacci sequence using input', x=19, language='python')
+code = lm.predict_code('calculate the fibonacci sequence using input', x=19, 
+                       variable_names={'output': 'ans'}, language='python')
 print(code)
-exec(code)
-print(f'\nAnswer: {y}')
+exec(code) # execute code in Python
+print(f'\nAnswer: {ans}')
 ```
 ```
-x, y = 19, None
+x, ans = 19, None
 
 def Fibonacci(x): 
     if x<0: 
@@ -185,7 +183,7 @@ def Fibonacci(x):
     else: 
         return Fibonacci(x-1)+Fibonacci(x-2) 
 
-y = Fibonacci(x)
+ans = Fibonacci(x)
 
 Answer: 2584
 ```

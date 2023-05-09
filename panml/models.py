@@ -250,13 +250,18 @@ class OpenAIModelPack():
             return history # returns all historical prediction output
         
     # Generate and execute code using (LM powered function)
-    def predict_code(self, text, x, language='python', max_tokens=500):
+    def predict_code(self, text, x, variable_names={'input': 'x', 'output': 'y'}, language='python', max_tokens=500):
+        if 'input' not in variable_names:
+            variable_names['input'] = 'x'
+        if 'output' not in variable_names:
+            variable_names['output'] = 'y'
+            
         if self.model != 'text-davinci-002':
             raise ValueError(f"The specified model is '{self.model}'. Only 'text-davinci-002' is supported in this package for code generation")
         
-        input_vars = f"x, y = {x}, None" # Set input and output variables
+        input_vars = f"{variable_names['input']}, {variable_names['output']} = {x}, None" # Set input and output variables
         prompt_prepend = f'Write {language} code to only produce function and input variable x, then call the function without print, without enter input:'
-        prompt_append = 'of variable x and return output in y' # Set prompt
+        prompt_append = f"of variable {variable_names['input']} and return output in {variable_names['output']}" # Set prompt
         output_context = self.predict(f'{prompt_prepend} {text} {prompt_append}', max_tokens=max_tokens) # Get predicted code snippet
         code_context = f"{input_vars}\n{output_context['text']}" # Create code context
         return code_context
