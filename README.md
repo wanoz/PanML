@@ -114,7 +114,8 @@ output['text']
 ```
 ```
 # Output
-\nThe best way to live a healthy lifestyle is to eat healthy foods, get regular exercise, and get enough sleep.
+\nThe best way to live a healthy lifestyle is to eat healthy foods, get regular exercise, 
+and get enough sleep.
 ```
 
 Show probability of output token
@@ -146,7 +147,18 @@ output['text']
 
 ```
 # Output
-'\nAssuming you are starting from a sedentary lifestyle, a good goal to aim for is 30 minutes of moderate-intensity exercise most days of the week. This could include brisk walking, biking, swimming, or using a elliptical trainer. Start with whatever you feel comfortable with and gradually increase your time and intensity as you get more fit. Remember to warm up and cool down for 5-10 minutes before and after your workout. In addition to aerobic exercise, it is also important to include strength training in your routine. Strength-training not only helps to tone your body, but can also help to reduce your risk of injuries in the future. A simple way to start strength-training is to use your own body weight for resistance. Try doing push-ups, sit-ups, and squats. As you get stronger, you can add weight by using dumbbells or resistance bands. Aim for two to three days of strength-training per week. Finally, be sure to get enough sleep each night. Most adults need 7-8 hours of sleep per night. Getting enough sleep will help your body to recover from your workouts and will also help to reduce stress levels.'
+'\nAssuming you are starting from a sedentary lifestyle, a good goal to aim for is 
+30 minutes of moderate-intensity exercise most days of the week. 
+This could include brisk walking, biking, swimming, or using a elliptical trainer. 
+Start with whatever you feel comfortable with and gradually increase your time and intensity as you get more fit. 
+Remember to warm up and cool down for 5-10 minutes before and after your workout. 
+In addition to aerobic exercise, it is also important to include strength training in your routine. 
+Strength-training not only helps to tone your body, but can also help to reduce your risk of injuries in the future. 
+A simple way to start strength-training is to use your own body weight for resistance. 
+Try doing push-ups, sit-ups, and squats. As you get stronger, you can add weight by using dumbbells or resistance bands. 
+Aim for two to three days of strength-training per week. 
+Finally, be sure to get enough sleep each night. Most adults need 7-8 hours of sleep per night. 
+Getting enough sleep will help your body to recover from your workouts and will also help to reduce stress levels.'
 ```
 
 Generate embedding
