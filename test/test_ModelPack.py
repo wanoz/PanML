@@ -38,5 +38,7 @@ class TestModelPack(unittest.TestCase):
     def test_correct_model_source_input(self):
         # test valid model and source match combo 1
         m = ModelPack(model='gpt2', source='huggingface')
+
+        # test valid model and source match combo 2
         m = ModelPack(model='tezt-davinci-002', source='openai')
         
