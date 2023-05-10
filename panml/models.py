@@ -3,6 +3,7 @@ import pandas as pd
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from typing import Union
 
 from datasets import Dataset
 from transformers import AutoModelForCausalLM, AutoModelForSeq2SeqLM, AutoTokenizer
@@ -10,12 +11,12 @@ from transformers import TrainingArguments, Trainer, Seq2SeqTrainer, DataCollato
 import openai
 
 # HuggingFace model
-class HuggingFaceModelPack():
+class HuggingFaceModelPack:
     '''
     Generic model pack class for HuggingFace Hub models
     '''
     # Initialize class variables
-    def __init__(self, model, input_block_size, padding_length, tokenizer_batch, source):
+    def __init__(self, model: str, input_block_size: int, padding_length: int, tokenizer_batch: bool, source: str) -> None:
         if source == 'huggingface':
             if 'flan' in model:
                 self.model_hf = AutoModelForSeq2SeqLM.from_pretrained(model)
@@ -42,7 +43,7 @@ class HuggingFaceModelPack():
             self.tokenizer.pad_token = self.model_hf.config.eos_token_id
     
     # Embed text
-    def embedding(self, text):
+    def embedding(self, text: str) -> torch.Tensor:
         token_ids = self.tokenizer.encode(text, return_tensors='pt')
         
         # Get embeddings
@@ -58,8 +59,9 @@ class HuggingFaceModelPack():
         return emb_pad
     
     # Generate text
-    def predict(self, text, max_length=50, skip_special_tokens=True, display_probability=False, 
-                num_return_sequences=1, temperature=0.8, top_p=0.8, top_k=0, no_repeat_ngram_size=3):
+    def predict(self, text: str, max_length: int=50, skip_special_tokens: bool=True, 
+                display_probability: bool=False, num_return_sequences: int=1, temperature: float=0.8, 
+                top_p: float=0.8, top_k: int=0, no_repeat_ngram_size: int=3) -> dict[str, str]:
         output_context = {
             'text': None,
             'probability': None,
@@ -93,11 +95,11 @@ class HuggingFaceModelPack():
         return output_context
     
     # Tokenize function
-    def _tokenize_function(self, examples):
+    def _tokenize_function(self, examples: Dataset) -> Dataset:
         return self.tokenizer(examples['text'])
     
     # Tokenize pandas dataframe feature
-    def tokenize_text(self, x, batched):  
+    def tokenize_text(self, x: list[str], batched) -> Dataset:  
         df_sample = pd.DataFrame({'text': x})
         hf_dataset = Dataset.from_pandas(df_sample)
         if batched:
@@ -108,7 +110,7 @@ class HuggingFaceModelPack():
         return tokenized_dataset
     
     # Model training
-    def fit(self, x, y, train_args={}, instruct=False):
+    def fit(self, x: list[str], y: list[str], train_args: dict[str, Union[str, int, float]]={}, instruct: bool=False) -> None:
         # Convert to tokens format from pandas dataframes
         tokenized_data = self.tokenize_text(x, batched=self.tokenizer_batch)
         tokenized_target = self.tokenize_text(y, batched=self.tokenizer_batch)
@@ -174,19 +176,19 @@ class HuggingFaceModelPack():
             trainer.save_model(f'./results/model_{train_args["title"]}') # Save trained model
     
 # OpenAI model
-class OpenAIModelPack():
+class OpenAIModelPack:
     '''
     OpenAI model class
     '''
-    def __init__(self, model, api_key):
+    def __init__(self, model: str, api_key: str) -> None:
         self.model = model
         self.model_embedding = 'text-embedding-ada-002'
         openai.api_key = api_key
     
     # Generate text of single model call
     @staticmethod
-    def _predict(model, text, temperature, max_tokens, top_p, n, frequency_penalty, presence_penalty, 
-                 display_probability, logprobs):
+    def _predict(model: str, text: str, temperature: float, max_tokens: int, top_p: float, n: int, 
+                 frequency_penalty: float, presence_penalty: float, display_probability: bool, logprobs: int) -> dict[str, str]:
         output_context = {
             'text': None,
             'probability': None,
@@ -214,8 +216,9 @@ class OpenAIModelPack():
         return output_context
     
     # Generate text in prompt loop
-    def predict(self, text, temperature=0, max_tokens=100, top_p=1, n=3, frequency_penalty=0, presence_penalty=0, 
-                display_probability=False, logprobs=1, prompt_modifier=[{'prepend': '', 'append': ''}], keep_last=True):
+    def predict(self, text: str, temperature: float=0, max_tokens: int=100, top_p: float=1, n: int=3, 
+                frequency_penalty: float=0, presence_penalty: float=0, display_probability: bool=False, logprobs: int=1, 
+                prompt_modifier: list[dict[str, str]]=[{'prepend': '', 'append': ''}], keep_last: bool=True) -> dict[str, str]:
         
         # Create loop for text prediction
         response_words = 0
@@ -250,7 +253,8 @@ class OpenAIModelPack():
             return history # returns all historical prediction output
         
     # Generate and execute code using (LM powered function)
-    def predict_code(self, text, x, variable_names={'input': 'x', 'output': 'y'}, language='python', max_tokens=500):
+    def predict_code(self, text: str, x: Union[int, float, str], variable_names: dict[str, str]={'input': 'x', 'output': 'y'}, 
+                     language: str='python', max_tokens: int=500) -> str:
         if 'input' not in variable_names:
             variable_names['input'] = 'x'
         if 'output' not in variable_names:
@@ -267,7 +271,7 @@ class OpenAIModelPack():
         return code_context
         
     # Embed text
-    def embedding(self, text, model=None):
+    def embedding(self, text: str, model: str=None) -> list[float]:
         text = text.replace("\n", " ")
         if model is None:
             model = self.model_embedding          
@@ -276,19 +280,12 @@ class OpenAIModelPack():
         return emb
         
 # Entry model pack class           
-class ModelPack():
+class ModelPack:
     '''
     Main model pack class
     '''
-    def __init__(self, 
-                 model,
-                 tokenizer=None, 
-                 input_block_size=10, 
-                 padding_length=100, 
-                 tokenizer_batch=False,
-                 source='huggingface', 
-                 api_key=None):
-        
+    def __init__(self, model: str, tokenizer: AutoTokenizer=None, input_block_size: int=20, padding_length: int=100, 
+                 tokenizer_batch: bool=False, source: str='huggingface', api_key: str=None) -> None:
         self.padding_length = padding_length
         self.tokenizer = tokenizer
         self.model = model
@@ -365,10 +362,10 @@ class ModelPack():
         return self.instance.__getattribute__(name)
     
 # Set device type
-def set_device():
+def set_device() -> str:
     return 'cuda' if torch.cuda.is_available() else 'cpu'
 
 # Calculate cosine similarity of two matrices    
-def cosine_similarity(m1, m2):
-    return F.cosine_similarity(m1.view(1, -1), m2.view(1, -1))
+def cosine_similarity(t1: torch.Tensor, t2: torch.Tensor) -> torch.Tensor:
+    return F.cosine_similarity(t1.view(1, -1), t2.view(1, -1))
 
