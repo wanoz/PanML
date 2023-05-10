@@ -99,21 +99,22 @@ class HuggingFaceModelPack:
         return self.tokenizer(examples['text'])
     
     # Tokenize pandas dataframe feature
-    def tokenize_text(self, x: list[str], batched) -> Dataset:  
+    def tokenize_text(self, x: list[str], batched: bool, num_proc: int) -> Dataset:  
         df_sample = pd.DataFrame({'text': x})
         hf_dataset = Dataset.from_pandas(df_sample)
         if batched:
-            tokenized_dataset = hf_dataset.map(self._tokenize_function, batched=batched, num_proc=4)
+            tokenized_dataset = hf_dataset.map(self._tokenize_function, batched=batched, num_proc=num_proc)
         else:
             tokenized_dataset = hf_dataset.map(self._tokenize_function)
 
         return tokenized_dataset
     
     # Model training
-    def fit(self, x: list[str], y: list[str], train_args: dict[str, Union[str, int, float]]={}, instruct: bool=False) -> None:
+    def fit(self, x: list[str], y: list[str], train_args: dict[str, Union[str, int, float]]={}, 
+            instruct: bool=False, num_proc=4) -> None:
         # Convert to tokens format from pandas dataframes
-        tokenized_data = self.tokenize_text(x, batched=self.tokenizer_batch)
-        tokenized_target = self.tokenize_text(y, batched=self.tokenizer_batch)
+        tokenized_data = self.tokenize_text(x, batched=self.tokenizer_batch, num_proc=num_proc)
+        tokenized_target = self.tokenize_text(y, batched=self.tokenizer_batch, num_proc=num_proc)
         
         # Check for missing input arguments
         if set(list(train_args.keys())) != set(self.train_default_args):
