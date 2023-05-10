@@ -132,7 +132,7 @@ print(output['probability'][:5]) # show probability of first 5 tokens in the gen
  {'token': ' to', 'probability': 0.9993104225678759}]
 ```
 
-Generate output in prompt modified loop (using a prompt modifier) <br>
+Generate output using multi-stage prompting (via a prompt modifier) <br>
 ```
 prompts = [
     {'prepend': 'you are a sports coach'},
@@ -143,7 +143,7 @@ prompts = [
 output = lm.predict('What is the best way to live a healthy lifestyle?', prompt_modifier=prompts, max_tokens=600)
 output['text']
 ```
-###### *Note: A prompt modifier is basically a list where each item specifies text to be prepended (attached before) and/or appended (attched after) the query/prompt. For example, the texts in first item of list will be prepended/appended to the initial query/prompt, and the texts of the second item in the list will be prepended/appended to the returned LLM response, and the resulting follow-up query/prompt will then be automatically issued to the LLM. This repeats recursively covering all of the modifiers in the prompt modifier list - it is essentially a method of "chaining" a series of prompts and response patterns to LLM to produce a desirable final output.*
+###### *Note: Prompt modifier is a list where each item specifies text to be prepended (attached before) and/or appended (attched after) the query/prompt. For example, the texts in first item of list will be prepended/appended to the initial query/prompt, and the texts of the second item in the list will be prepended/appended to the returned LLM response, and the resulting follow-up query/prompt will then be automatically issued to the LLM. This repeats recursively through all of the prompts in the prompt modifier list*
 
 ```
 # Output
